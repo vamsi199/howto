@@ -1,0 +1,104 @@
+package main
+
+import (
+	"fmt"
+	"go/parser"
+	"go/token"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+func main() {
+	folder(`C:\gows\src\github.build.ge.com\aviation-dss\fpa-tool`)
+}
+
+func folder(dir string) {
+	fset := token.NewFileSet() // positions are relative to fset
+
+	// Parse the file containing this very example
+	// but stop after processing the imports.
+	imp, err := ParseDirImports(fset, dir)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(imp)
+	return
+
+	uniqpkg := map[string]bool{}
+	for _, i := range imp {
+		for _, r := range i.importedRepo {
+			uniqpkg[r] = true
+		}
+	}
+
+	for k, _ := range uniqpkg {
+		fmt.Println(k)
+	}
+
+}
+
+type importss []imports
+type imports struct {
+	folder       string
+	pkg          string
+	file         string
+	importedRepo []string
+}
+
+func (imp importss) String() string {
+	var s string
+	for _, i := range imp {
+		s += fmt.Sprintf("package:%v, folder:%v, file:%v\n", i.pkg, i.folder, i.file)
+		s += fmt.Sprintf("packaged used:\n")
+		for _, r := range i.importedRepo {
+			s += fmt.Sprintf("\t %v\n", r)
+		}
+	}
+
+	return s
+}
+
+func ParseDirImports(fset *token.FileSet, path string) (f importss, first error) {
+
+	list, err := getGoFiles(path)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, filename := range list {
+		if src, err := parser.ParseFile(fset, filename, nil, parser.ImportsOnly); err == nil {
+			i := imports{}
+			i.pkg = src.Name.Name
+			i.folder, i.file = filepath.Split(filename)
+			for _, s := range src.Imports {
+				i.importedRepo = append(i.importedRepo, s.Path.Value)
+			}
+			f = append(f, i)
+		} else if first == nil {
+			first = err
+		}
+	}
+
+	return
+}
+
+func getGoFiles(fileSourceDir string) ([]string, error) {
+	fileList := []string{}
+	err := filepath.Walk(fileSourceDir, func(path string, f os.FileInfo, err error) error {
+		if strings.HasSuffix(path, ".go") {
+			fileList = append(fileList, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("Files list::")
+	for i, file := range fileList {
+		fmt.Println("\t", i, file)
+	}
+	return fileList, nil
+}
