@@ -9,7 +9,7 @@ import (
 	"net/url"
 )
 
-func init(){
+func init() {
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/githublogin", handleGithubLogin)
 	http.HandleFunc("/oauthcallback", handleOauthCallback)

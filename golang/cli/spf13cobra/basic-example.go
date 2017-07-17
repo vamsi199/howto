@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func main(){
+func main() {
 	CmdGet.AddCommand(CmdGetContact)
 	RootCmd.AddCommand(CmdGet)
 	RootCmd.AddCommand(CmdPut)
@@ -29,7 +29,6 @@ var CmdGetContact = &cobra.Command{
 		fmt.Println("executing get contact")
 	},
 }
-
 
 var CmdPut = &cobra.Command{
 	Use:   "put",

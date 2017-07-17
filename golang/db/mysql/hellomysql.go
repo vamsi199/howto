@@ -65,7 +65,6 @@ func main() {
 
 }
 
-
 /*
 create database dev;
 
@@ -81,4 +80,4 @@ STATUS varchar(100)
 );
 
 
- */
+*/
