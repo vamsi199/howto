@@ -2,8 +2,7 @@ package main
 
 import "net/http"
 
-
-func main(){
+func main() {
 
 	http.Handle("/", middleware.ThenFunc(welcomeHandler))
 
@@ -11,9 +10,7 @@ func main(){
 
 }
 
-
-
-func welcomeHandler(w http.ResponseWriter, r *http.Request){
+func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("hello world"))
-}
 
+}

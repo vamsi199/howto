@@ -9,10 +9,10 @@ import (
 	"net/url"
 )
 
-func init(){
-	http.HandleFunc("/", handleIndex)
+func init() {
+	http.HandleFunc("/login", handleIndex)
 	http.HandleFunc("/githublogin", handleGithubLogin)
-	http.HandleFunc("/oauthcallback", handleOauthCallback)
+	http.HandleFunc("/callback", handleOauthCallback)
 
 }
 
@@ -39,7 +39,7 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 
 	id := uuid.New()
 	fmt.Println("id:", id)
-	//ctx := r.Context()
+	ctx := r.Context()
 	//TODO: get session from context
 
 	//redirect_uri := "http://localhost:8080/callback"
@@ -59,11 +59,18 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 
 	//TODO: save session back to context after saving the id.String()  to a field in session.State
 
+	r.WithContext(ctx)
+
 	http.Redirect(w, r, redirectRequestUrl, 302)
 }
 
 func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
-	/*	state := r.FormValue("state")
+	state := r.FormValue("state")
+	code := r.FormValue("code")
+
+	w.Write([]byte(code + "\n" + state))
+
+	/*
 		////ctx := context.WithValue(r.Context(), "state", state)
 
 		ctx := r.Context()
