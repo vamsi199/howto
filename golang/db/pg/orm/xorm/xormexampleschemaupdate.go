@@ -1,17 +1,17 @@
-// Note: make sure pg is already installed and a table with the name customer (fields: name) already exists.
-//
+// Note: make sure pg is already installed.
+// eventhough the table doesn;t exist, the Sync2() will create the table and the columns.
+// if the table already exists but not any columns, then the new columns are created.
 
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/go-xorm/xorm"
 	_ "github.com/lib/pq"
 )
 
 type customer struct {
-	Name string `xorm:"text name"`
+	Name string `xorm:"text name2"`
 	Address string `xorm:"text address"`
 }
 
@@ -24,29 +24,13 @@ func initORM() *xorm.Engine {
 		panic(err)
 	}
 	return x
+
 }
 
 func main() {
 	xorm := initORM()
 
-	var db *sql.DB
-	db = xorm.DB().DB
-
-	err:= db.Ping()
-	if err != nil{
-		fmt.Println("ping error:", err)
-		return
-	}
-	fmt.Println("Ping Successful")
-
-	var ver string
-
-	err= db.QueryRow("select version()").Scan(&ver)
-	if err != nil{
-		fmt.Println("version error:", err)
-		return
-	}
-	fmt.Println("version:", ver)
+	xorm.Sync2(&customer{})
 
 	c := customer{Name: "xorm insert 3"}
 	i, err := xorm.Insert(c)
@@ -55,7 +39,5 @@ func main() {
 		return
 	}
 	fmt.Println("xorm Insert completed:", i)
-
-
 
 }
