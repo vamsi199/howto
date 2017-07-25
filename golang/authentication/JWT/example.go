@@ -23,11 +23,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	//3: create and return token
 	token := jwt.New(jwt.SigningMethodHS256)
-
 	claims := token.Claims.(jwt.MapClaims)
 	claims["admin"] = true
-	claims["name"] = "??"
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	//claims["name"] = "??"
+	claims["exp"] = time.Now().Add(time.Minute * 1).Unix()
 
 	/* Sign the token with our secret */
 	tokenString, _ := token.SignedString(mySigningKey)
@@ -44,19 +43,19 @@ func ValidateToken(next http.Handler) http.Handler {
 			func(token *jwt.Token) (interface{}, error) {
 				return mySigningKey, nil
 			})
-
-		if err == nil {
-			if token.Valid {
-				next.ServeHTTP(w, r)
-			} else {
-				w.WriteHeader(http.StatusUnauthorized)
-				fmt.Fprint(w, "Token is not valid")
-			}
-		} else {
+		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			fmt.Fprint(w, "Unauthorized access to this resource")
+			fmt.Fprint(w, token.Raw+"\nUnauthorized access to this resource\n"+err.Error())
+			http.Redirect(w, r, "localhost:8080/login", http.StatusUnauthorized)
+			return
 		}
-
+		if !token.Valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprint(w, "Token is not valid")
+			http.Redirect(w, r, "localhost:8080/login", http.StatusUnauthorized)
+			return
+		}
+		next.ServeHTTP(w, r)
 	})
 }
 
@@ -65,9 +64,8 @@ func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
-	http.Handle("/", middleware.ThenFunc(welcomeHandler))
+	http.Handle("/hello", middleware.ThenFunc(welcomeHandler))
+	http.HandleFunc("/login", LoginHandler)
 
 	http.ListenAndServe(":8080", nil)
-
 }
