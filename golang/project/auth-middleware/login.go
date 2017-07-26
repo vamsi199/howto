@@ -33,7 +33,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("&&& handleGithubLogin begin")
+	fmt.Println("### handleGithubLogin begin")
 
 	fmt.Println("app url:", r.Host)
 

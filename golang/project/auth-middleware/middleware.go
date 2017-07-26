@@ -18,19 +18,23 @@ var middleware = alice.New(logger, auth)
 func logger(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Logging begin")
+		fmt.Println("### logger begin")
 		t1 := time.Now()
 		next.ServeHTTP(w, r)
 		t2 := time.Since(t1)
-		fmt.Println("request duration", t2)
-		fmt.Println("Logging end")
+		fmt.Println("### logger request duration", t2)
+		fmt.Println("### logger end")
 	})
 
 }
 
 func auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		fmt.Println("### auth end")
 		//TODO: allow to continue only if oauth authenticated by verifying the token
 		next.ServeHTTP(w, r)
+
+		fmt.Println("### auth end")
 	})
 }
