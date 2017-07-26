@@ -39,15 +39,15 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("### handleGithubLogin begin")
 
-	fmt.Println("app url:", r.Host)
+	fmt.Println("### handleGithubLogin app url:", r.Host)
 
 	id := uuid.New()
-	fmt.Println("id:", id)
+	fmt.Println("### handleGithubLogin id:", id)
 
 
 	//redirect_uri := "http://localhost:8080/callback"
 	redirect_uri := "http://" + r.Host + "/callback"
-	fmt.Println("redirect_uri:", redirect_uri)
+	fmt.Println("### handleGithubLogin redirect_uri:", redirect_uri)
 
 	values := url.Values{}
 	values.Add("client_id", "03712bbff7dae4203b4e")
@@ -58,7 +58,7 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 	redirectRequestUrl := fmt.Sprintf("https://github.com/login/oauth/authorize?%s",
 		values.Encode())
 
-	fmt.Println("redirectRequestUrl:", redirectRequestUrl)
+	fmt.Println("### handleGithubLogin redirectRequestUrl:", redirectRequestUrl)
 
 	// save session to context if required
 	//TODO: save session back to context after saving the id.String()  to a field in session.State
