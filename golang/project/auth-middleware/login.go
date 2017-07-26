@@ -73,7 +73,7 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("state")
 	code := r.FormValue("code")
 
-	fmt.Printf("### handleOauthCallback: state:%v code:%v", state, code)
+	fmt.Printf("### handleOauthCallback: state:%v code:%v\n", state, code)
 
 	//TODO: generate the JWT and add it to response header
 
