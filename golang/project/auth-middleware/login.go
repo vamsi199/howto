@@ -7,7 +7,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"github.com/dgrijalva/jwt-go/request"
+	"github.com/dgrijalva/jwt-go"
 )
+
+var mySigningKey = []byte("secret")//TODO: replace this with the actual secret. or how about public-key&private-key approach?
 
 func init() {
 	http.HandleFunc("/login", handleIndex)
@@ -87,4 +91,32 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 
 
 	fmt.Println("### handleOauthCallback end")
+}
+
+
+func ValidateToken(next http.Handler) http.Handler {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("### ValidateToken begin", r.URL)
+		token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
+			func(token *jwt.Token) (interface{}, error) {
+				return mySigningKey, nil
+			})
+		if err != nil {
+			fmt.Println("### ValidateToken error: ", err)
+			//w.WriteHeader(http.StatusUnauthorized)
+			//fmt.Fprint(w, "\nUnauthorized access to this resource\n"+err.Error())
+			http.Redirect(w, r, "localhost:8080/login", 302)
+			return
+		}
+		if !token.Valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Println("### ValidateToken error: Token is not valid")
+			http.Redirect(w, r, "localhost:8080/login", 302)
+			return
+		}
+		next.ServeHTTP(w, r)
+
+		fmt.Println("### ValidateToken end")
+	})
 }
