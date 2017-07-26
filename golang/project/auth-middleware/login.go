@@ -39,8 +39,7 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 
 	id := uuid.New()
 	fmt.Println("id:", id)
-	ctx := r.Context()
-	//TODO: get session from context
+
 
 	//redirect_uri := "http://localhost:8080/callback"
 	redirect_uri := "http://" + r.Host + "/callback"
@@ -57,18 +56,25 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("redirectRequestUrl:", redirectRequestUrl)
 
+	// save session to context if required
 	//TODO: save session back to context after saving the id.String()  to a field in session.State
-
-	r.WithContext(ctx)
+	//ctx := r.Context()
+	//r.WithContext(ctx)
 
 	http.Redirect(w, r, redirectRequestUrl, 302)
 }
 
 func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("### handleOauthCallback begin") //TODO: append the request url details to this log entry
 	state := r.FormValue("state")
 	code := r.FormValue("code")
 
-	w.Write([]byte(code + "\n" + state))
+	fmt.Printf("### handleOauthCallback: state:%v code:%v", state, code)
+
+	//TODO: generate the JWT and add it to response header
+
+
+	//TODO: then redirect to landing page
 
 	/*
 		////ctx := context.WithValue(r.Context(), "state", state)
@@ -78,4 +84,7 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 
 		//TODO: compare the state from session with the state from request. if no match, red flag
 	*/
+
+
+	fmt.Println("### handleOauthCallback end")
 }
