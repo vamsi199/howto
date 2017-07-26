@@ -42,7 +42,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	redirectRequestUrl := fmt.Sprintf("localhost:8080/hello?%s",
 		values.Encode())
 
-	http.Redirect(w, r, redirectRequestUrl, http.StatusOK)
+	http.Redirect(w, r, redirectRequestUrl, 302)
 	//w.Write([]byte("authorized"))
 }
 
@@ -50,15 +50,15 @@ func SetHeader(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("### SetHeader begin", r.URL)
-		//TODO: is this the only way to read the query parameters?
+		//TODO: is this the only way to read the query parameters? or r.FormValue("token")
 		vars, err := url.ParseQuery(r.URL.RawQuery)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
-
 		if val, exists := vars["token"]; exists {
 			r.Header.Add("Authorization","Bearer "+val[0])
 		}
+
 		next.ServeHTTP(w, r)
 		fmt.Println("### SetHeader end")
 	})
@@ -77,13 +77,13 @@ func ValidateToken(next http.Handler) http.Handler {
 			fmt.Println("### ValidateToken error: ", err)
 			//w.WriteHeader(http.StatusUnauthorized)
 			//fmt.Fprint(w, "\nUnauthorized access to this resource\n"+err.Error())
-			http.Redirect(w, r, "localhost:8080/login", http.StatusUnauthorized)
+			http.Redirect(w, r, "localhost:8080/login", 302)
 			return
 		}
 		if !token.Valid {
 			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Println("### ValidateToken error: Token is not valid")
-			http.Redirect(w, r, "localhost:8080/login", http.StatusUnauthorized)
+			http.Redirect(w, r, "localhost:8080/login", 302)
 			return
 		}
 		next.ServeHTTP(w, r)
