@@ -3,15 +3,16 @@ package main
 import (
 	//"context"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
 	"github.com/google/uuid"
 	"io"
 	"net/http"
 	"net/url"
-	"github.com/dgrijalva/jwt-go/request"
-	"github.com/dgrijalva/jwt-go"
+	"time"
 )
 
-var mySigningKey = []byte("secret")//TODO: replace this with the actual secret. or how about public-key&private-key approach?
+var mySigningKey = []byte("secret") //TODO: replace this with the actual secret. or how about public-key&private-key approach?
 
 func init() {
 	http.HandleFunc("/login", handleIndex)
@@ -44,7 +45,6 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 	id := uuid.New()
 	fmt.Println("### handleGithubLogin id:", id)
 
-
 	//redirect_uri := "http://localhost:8080/callback"
 	redirect_uri := "http://" + r.Host + "/callback"
 	fmt.Println("### handleGithubLogin redirect_uri:", redirect_uri)
@@ -76,10 +76,22 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("### handleOauthCallback: state:%v code:%v\n", state, code)
 
 	//TODO: generate the JWT and add it to response header
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["admin"] = true
+	//claims["name"] = "??"
+	claims["exp"] = time.Now().Add(time.Minute * 10).Unix()
 
+	tokenString, _ := token.SignedString(mySigningKey)
+
+	values := url.Values{}
+	values.Add("token", tokenString)
 
 	//TODO: then redirect to landing page
-	http.Redirect(w, r, "localhost:8080/hello", 302)
+	redirectRequestUrl := fmt.Sprintf("localhost:8080/hello?%s",
+		values.Encode())
+	http.Redirect(w, r, redirectRequestUrl, 302)
+
 	/*
 		////ctx := context.WithValue(r.Context(), "state", state)
 
@@ -89,10 +101,8 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 		//TODO: compare the state from session with the state from request. if no match, red flag
 	*/
 
-
 	fmt.Println("### handleOauthCallback end")
 }
-
 
 func ValidateToken(next http.Handler) http.Handler {
 
