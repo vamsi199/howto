@@ -7,7 +7,7 @@ import (
 
 func main() {
 
-	http.Handle("/", middleware.ThenFunc(welcomeHandler))
+	http.Handle("/hello", middleware.ThenFunc(welcomeHandler))
 
 	http.ListenAndServe(":8080", nil)
 

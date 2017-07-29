@@ -79,7 +79,7 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 
 
 	//TODO: then redirect to landing page
-
+	http.Redirect(w, r, "localhost:8080/hello", 302)
 	/*
 		////ctx := context.WithValue(r.Context(), "state", state)
 

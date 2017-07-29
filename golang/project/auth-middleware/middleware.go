@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-var middleware = alice.New(logger, auth)
+var middleware = alice.New(logger, ValidateToken)
 
 func logger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
