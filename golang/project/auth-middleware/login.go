@@ -75,7 +75,7 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("### handleOauthCallback: state:%v code:%v\n", state, code)
 
-	//TODO: generate the JWT and add it to response header
+	//generate the JWT and add it to response header
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["admin"] = true
@@ -87,7 +87,7 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 	values := url.Values{}
 	values.Add("token", tokenString)
 
-	//TODO: then redirect to landing page
+	//then redirect to landing page
 	redirectRequestUrl := fmt.Sprintf("hello?%s",
 		values.Encode())
 	http.Redirect(w, r, redirectRequestUrl, 302)
@@ -113,20 +113,27 @@ func ValidateToken(next http.Handler) http.Handler {
 				return mySigningKey, nil
 			})
 		if err != nil {
-			fmt.Println("err != nil")
+			w.WriteHeader(http.StatusUnauthorized)
+
+			fmt.Println("### ValidateToken err != nil")
 			fmt.Println("### ValidateToken error: ", err)
 			//w.WriteHeader(http.StatusUnauthorized)
 			//fmt.Fprint(w, "\nUnauthorized access to this resource\n"+err.Error())
 
-			//redirectUrl:= "localhost:8080/login"
-
-			http.Redirect(w, r, "login", 302)
+			redirectUrl:= "login"
+			fmt.Println("### ValidateToken redirecting to ", redirectUrl)
+			http.Redirect(w, r, redirectUrl, 302)
 			return
 		}
 		if !token.Valid {
 			w.WriteHeader(http.StatusUnauthorized)
+			
+			fmt.Println("### ValidateToken !token.Valid")
 			fmt.Println("### ValidateToken error: Token is not valid")
-			http.Redirect(w, r, "login", 302)
+
+			redirectUrl:= "login"
+			fmt.Println("### ValidateToken redirecting to ", redirectUrl)
+			http.Redirect(w, r, redirectUrl, 302)
 			return
 		}
 		next.ServeHTTP(w, r)
