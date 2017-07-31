@@ -11,7 +11,7 @@ var middleware = alice.New(logger, ValidateToken)
 
 func logger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("### logger begin %v\n", r.URL)
+		fmt.Printf("### logger begin %v\n", r.URL)
 		t1 := time.Now()
 		next.ServeHTTP(w, r)
 		t2 := time.Since(t1)
