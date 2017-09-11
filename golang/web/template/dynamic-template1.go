@@ -7,7 +7,7 @@ import (
 	"text/template"
 )
 
-type people struct {
+type person struct {
 	Fname string
 	Mname  string
 	Lname string
@@ -20,7 +20,7 @@ func main() {
 	http.ListenAndServe(":8080", myr)
 }
 func tmplHandler(w http.ResponseWriter, r *http.Request) {
-	p := people{"Praveen", "Kumar","K",37}
+	p := person{"Praveen", "Kumar","K",37}
 	tmpl := template.Must(template.ParseFiles("dtpl.gohtml"))
 	tmpl.Execute(w, p)
 }
