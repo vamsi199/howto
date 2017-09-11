@@ -11,7 +11,7 @@ func main() {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>static-template2</title>
+<title>static-template1</title>
 <body>
 Hello World from Static Template1
 </body>
