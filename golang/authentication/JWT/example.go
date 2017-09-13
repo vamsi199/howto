@@ -56,7 +56,7 @@ func SetHeader(next http.Handler) http.Handler {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 		if val, exists := vars["token"]; exists {
-			r.Header.Add("Authorization","Bearer "+val[0])
+			r.Header.Add("Authorization", "Bearer "+val[0])
 		}
 
 		next.ServeHTTP(w, r)

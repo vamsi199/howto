@@ -84,7 +84,7 @@ func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
 
 	tokenString, _ := token.SignedString(mySigningKey)
 
-	r.Header.Add("Authorization","Bearer "+tokenString)
+	r.Header.Add("Authorization", "Bearer "+tokenString)
 
 	//then redirect to landing page
 	redirectRequestUrl := fmt.Sprintf("hello")
@@ -118,7 +118,7 @@ func ValidateToken(next http.Handler) http.Handler {
 			//w.WriteHeader(http.StatusUnauthorized)
 			//fmt.Fprint(w, "\nUnauthorized access to this resource\n"+err.Error())
 
-			redirectUrl:= "login"
+			redirectUrl := "login"
 			fmt.Println("### ValidateToken redirecting to", redirectUrl)
 			http.Redirect(w, r, redirectUrl, 302)
 			return
@@ -129,7 +129,7 @@ func ValidateToken(next http.Handler) http.Handler {
 			fmt.Println("### ValidateToken !token.Valid")
 			fmt.Println("### ValidateToken error: Token is not valid")
 
-			redirectUrl:= "login"
+			redirectUrl := "login"
 			fmt.Println("### ValidateToken redirecting to ", redirectUrl)
 			http.Redirect(w, r, redirectUrl, 302)
 			return

@@ -1,9 +1,11 @@
+
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
-	"text/template"
+	"strconv"
 )
 
 type person struct {
@@ -13,17 +15,32 @@ type person struct {
 	Age   int
 }
 
+var persons []person
+var tpl string
+
 func main() {
+	p1 := person{"Praveen", "Kumar", "K", 36}
+	p2 := person{"Srinivasulu", "Reddy", "M", 36}
+	persons = []person{p1, p2}
 	myr := mux.NewRouter()
 	myr.HandleFunc("/", tmplHandler)
 	http.ListenAndServe(":8080", myr)
 }
 func tmplHandler(w http.ResponseWriter, r *http.Request) {
-	p1 := person{"Praveen", "Kumar", "K", 37}
-	p2 := person{"Srinivasulu", "Reddy", "M", 37}
-	peoples := []person{p1, p2}
-	for _,p := range peoples {
-		tmpl := template.Must(template.ParseFiles("dtpl.gohtml"))
-		tmpl.Execute(w, p)
+	for x,_:=range persons {
+		tpl = `
+		<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<title>dynamic-template1</title>
+		</head>
+		<body>
+			Name :` + persons[x].Fname + ` ` + persons[x].Mname + `.` + persons[x].Lname + `<br/>
+			Age :` + strconv.Itoa(persons[x].Age) + `<br/>
+		</body>
+		</html>
+		`
+		fmt.Fprintf(w, tpl)
 	}
 }
