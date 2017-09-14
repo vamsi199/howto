@@ -9,13 +9,14 @@ step 0: write .proto file
   .proto file describing the structure for the desired data
 
 step 1: protoc: download, extract and PATH 
-  https://github.com/google/protobuf/releases/
+  `https://github.com/google/protobuf/releases/`
   
 step 2: protoc-gen-go: download, and PATH
-  go get -u github.com/golang/protobuf/protoc-gen-go
+  `go get -u github.com/golang/protobuf/protoc-gen-go`
   
 step 3: run protoc
 TODO: need to add more details
+
   example: `protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/mydata.proto`
 
   --go_out option gives us the protobug converted code for Go. 
