@@ -2,12 +2,11 @@
 package main
 
 import (
-	"os"
 	"text/template"
+	"net/http"
 )
 
-func main() {
-	stmpl := `<!DOCTYEP=html>
+const stmpl  =`<!DOCTYEP=html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -17,9 +16,14 @@ Hello World from Static Template1
 </body>
 </html>
 `
-	tmpl, err := template.New("static").Parse(stmpl)
-	if err != nil {
+func main() {
+	tmpl,err:= template.New("static").Parse(stmpl)
+	if err!=nil{
 		panic(err)
 	}
-	tmpl.Execute(os.Stdout, stmpl)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type","text/html")
+		tmpl.Execute(w,nil)//no data to pass so nill
+	})
+	http.ListenAndServe(":8080",nil)
 }
