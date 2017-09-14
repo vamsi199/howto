@@ -2,10 +2,8 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
-	"strconv"
+	"text/template"
 )
 
 type person struct {
@@ -15,27 +13,29 @@ type person struct {
 	Age   int
 }
 
-var p person
+const dtmpl = `
+	<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dynamic-template1</title>
+</head>
+<body>
+    Name : {{.Fname}} {{.Mname}}.{{.Lname}}<br/>
+    Age : {{.Age}}<br/>
+</body>
+</html>
+	`
 
 func main() {
-	p = person{"Praveen", "Kumar", "K", 36}
-	myr := mux.NewRouter()
-	myr.HandleFunc("/", tmplHandler)
-	http.ListenAndServe(":8080", myr)
-}
-func tmplHandler(w http.ResponseWriter, r *http.Request) {
-	tpl := `
-	<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>dynamic-template1</title>
-	</head>
-	<body>
-		Name :` + p.Fname + ` ` + p.Mname + `.` + p.Lname + `<br/>
-		Age :` + strconv.Itoa(p.Age) + `<br/>
-	</body>
-	</html>
-	`
-	fmt.Fprintf(w, tpl)
+	p := person{"Praveen", "Kumar", "K", 36}
+	tmpl, err := template.New("dynamic").Parse(dtmpl)
+	if err != nil {
+		panic(err)
+	}
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		tmpl.Execute(w, p)
+	})
+	http.ListenAndServe(":8080", nil)
 }
