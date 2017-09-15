@@ -1,11 +1,8 @@
-
 package main
 
 import (
-	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
-	"strconv"
+	"text/template"
 )
 
 type person struct {
@@ -15,20 +12,7 @@ type person struct {
 	Age   int
 }
 
-var persons []person
-var tpl string
-
-func main() {
-	p1 := person{"Praveen", "Kumar", "K", 36}
-	p2 := person{"Srinivasulu", "Reddy", "M", 36}
-	persons = []person{p1, p2}
-	myr := mux.NewRouter()
-	myr.HandleFunc("/", tmplHandler)
-	http.ListenAndServe(":8080", myr)
-}
-func tmplHandler(w http.ResponseWriter, r *http.Request) {
-	for x,_:=range persons {
-		tpl = `
+const dtmpl  =`
 		<!DOCTYPE html>
 		<html lang="en">
 		<head>
@@ -36,11 +20,27 @@ func tmplHandler(w http.ResponseWriter, r *http.Request) {
 			<title>dynamic-template1</title>
 		</head>
 		<body>
-			Name :` + persons[x].Fname + ` ` + persons[x].Mname + `.` + persons[x].Lname + `<br/>
-			Age :` + strconv.Itoa(persons[x].Age) + `<br/>
+			Name :{{.Fname}} {{.Mname}}.{{.Lname}}<br/>
+			Age :{{.Age}}<br/>
 		</body>
 		</html>
 		`
-		fmt.Fprintf(w, tpl)
+
+func main() {
+	p1 := person{"Praveen", "Kumar", "K", 36}
+	p2 := person{"Srinivasulu", "Reddy", "M", 36}
+	persons := []person{p1, p2}
+
+	tmpl, err:=template.New("dynamic-loop").Parse(dtmpl)
+	if err!=nil{
+		panic(err)
 	}
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		for _,v:= range persons{
+			p:=v
+			tmpl.Execute(w,p)
+		}
+	})
+	http.ListenAndServe(":8080", nil)
 }
