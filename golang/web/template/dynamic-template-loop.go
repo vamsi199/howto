@@ -17,11 +17,13 @@ const dtmpl  =`
 		<html lang="en">
 		<head>
 			<meta charset="UTF-8">
-			<title>dynamic-template1</title>
+			<title>dynamic-templateloop</title>
 		</head>
 		<body>
+			{{range .}}
 			Name :{{.Fname}} {{.Mname}}.{{.Lname}}<br/>
 			Age :{{.Age}}<br/>
+			{{end}}
 		</body>
 		</html>
 		`
@@ -37,10 +39,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		for _,v:= range persons{
-			p:=v
-			tmpl.Execute(w,p)
-		}
+		tmpl.Execute(w, persons)
 	})
 	http.ListenAndServe(":8080", nil)
 }
