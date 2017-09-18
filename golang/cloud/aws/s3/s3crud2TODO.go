@@ -16,17 +16,25 @@ var sess *session.Session
 var bkt *string
 
 func init() {
-	accesId := os.Getenv("s3accessid")       //"AKIAIOHZVBINWEK35PZA"//
-	accessKey := os.Getenv("secretacceskey") //"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"//
+	// configuration fields //TODO: crete single object to store all the required config fields for s3. i.e the list below
+	accessId := os.Getenv("s3accessid")
+	accessKey := os.Getenv("secretaccesskey")
 	token := ""
-	cred := credentials.NewStaticCredentials(accesId, accessKey, token)
+	region := "us-east-1"
+	bkt = aws.String("jenkins19")
+
+	cred := credentials.NewStaticCredentials(accessId, accessKey, token)
+	_, err := cred.Get()
+	if err != nil {
+		fmt.Printf("bad credentials: %s", err)
+	}
+
 	conf := aws.NewConfig()
 	conf.Credentials = cred
-	conf.Region = aws.String("us-east-1")
+	conf.Region = aws.String(region)
 
 	sess = session.Must(session.NewSession(conf))
 
-	bkt = aws.String("jenkins19")
 }
 
 func main() {
@@ -35,22 +43,28 @@ func main() {
 	if err != nil {
 		fmt.Println("upload error:", err)
 	}
+	fmt.Printf("uploaded %v sucessfully", key)
 
 	keys, err := list()
 	if err != nil {
 		fmt.Println("list error:", err)
 	}
+	fmt.Printf("list sucessful %v", keys)
 
 	for _, key := range keys {
 		if err = download(key); err != nil {
 			fmt.Printf("download %v error: %v", key, err)
+			continue
 		}
+		fmt.Println("download sucessfull:", key)
 	}
 
 	for _, key := range keys {
 		if err = delete(key); err != nil {
 			fmt.Printf("delete %v error: %v", key, err)
+			continue
 		}
+		fmt.Println("delete sucessfull:", key)
 	}
 
 }
@@ -61,10 +75,11 @@ func upload(filePath string) (key string, err error) {
 	if err != nil {
 		return "", err
 	}
+	defer f.Close()
 
 	key = filePath
-	upoadinput := s3manager.UploadInput{Bucket: bkt, Body: f, Key: aws.String(key)}
-	_, err = upload.Upload(&upoadinput)
+	uploadInput := s3manager.UploadInput{Bucket: bkt, Body: f, Key: aws.String(key)}
+	_, err = upload.Upload(&uploadInput)
 	if err != nil {
 		return "", err
 	}
