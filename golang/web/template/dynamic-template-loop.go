@@ -12,7 +12,7 @@ type person struct {
 	Age   int
 }
 
-const dtmpl  =`
+const dtmpl = `
 		<!DOCTYPE html>
 		<html lang="en">
 		<head>
@@ -33,8 +33,8 @@ func main() {
 	p2 := person{"Srinivasulu", "Reddy", "M", 36}
 	persons := []person{p1, p2}
 
-	tmpl, err:=template.New("dynamic-loop").Parse(dtmpl)
-	if err!=nil{
+	tmpl, err := template.New("dynamic-loop").Parse(dtmpl)
+	if err != nil {
 		panic(err)
 	}
 

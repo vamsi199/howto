@@ -16,31 +16,6 @@ import (
 var sess *session.Session
 var s3Client *s3.S3
 
-func init() {
-	// configuration fields //TODO: create single object to store all the required config fields for s3. i.e the list below
-	accessId := os.Getenv("s3accessid") //TODO: need to change the credentialsenv variables to AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
-	accessKey := os.Getenv("s3accesskey")
-	token := ""
-	region := "us-west-1"
-
-	//fmt.Println("access ID, Key: ", accessId, accessKey)
-
-	cred := credentials.NewStaticCredentials(accessId, accessKey, token)
-	_, err := cred.Get()
-	if err != nil {
-		fmt.Printf("bad credentials: %s", err)
-	}
-
-	conf := aws.NewConfig()
-	conf.Credentials = cred
-	conf.Region = aws.String(region)
-
-	sess = session.Must(session.NewSession(conf))
-
-
-
-
-}
 
 func main() {
 
@@ -84,49 +59,4 @@ func main() {
 		fmt.Println("delete sucessfull:", key)
 	}
 
-}
-
-/*func createBkt(bkt string)error{
-
-	input := &s3.CreateBucketInput{Bucket: aws.String(bkt)}
-	_, err:= s3Client.CreateBucket(input)
-	if err != nil{
-		return err
-	}
-
-	return nil
-}*/
-
-func upload(filePath string, bkt string) (key string, err error) {
-	upload := s3manager.NewUploader(sess)
-	f, err := os.Open(filePath)
-	if err != nil {
-		fmt.Println("error to open file")
-		return "", err
-	}
-	defer f.Close()
-
-	key = filePath
-	uploadInput := s3manager.UploadInput{Bucket: aws.String(bkt), Body: f, Key: aws.String(key)}
-	_, err = upload.Upload(&uploadInput)
-	if err != nil {
-		fmt.Println("error uploading file")
-		return "", err
-	}
-	return key, nil
-}
-
-func download(key string, bkt string) error {
-
-	return errors.New("not implemented")
-}
-
-func delete(key string, bkt string) error {
-
-	return errors.New("not implemented")
-}
-
-func list(bkt string) (keys []string, err error) {
-
-	return nil, errors.New("not implemented")
 }
