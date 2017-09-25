@@ -29,7 +29,7 @@ func main() {
 
 	file, err := os.Open("/users/vamsibottu/Downloads/Vamsi_Bottu EYE.doc")
 	if err != nil {
-		fmt.Printf("err opening file: %s", err)
+		fmt.Printf("err opening uploadfile: %s", err)
 	}
 	defer file.Close()
 	fileInfo, _ := file.Stat()

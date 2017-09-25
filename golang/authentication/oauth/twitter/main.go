@@ -11,7 +11,7 @@ import (
 
 func main() {
 	http.HandleFunc("/", handleIndex)
-	http.HandleFunc("/githublogin", handleGithubLogin)
+	http.HandleFunc("/twitterlogin", handleTwitterLogin)
 	http.HandleFunc("/oauthcallback", handleOauthCallback)
 	http.ListenAndServe(":8080", nil)
 }
@@ -23,7 +23,7 @@ const loginhtml = `<!DOCTYPE html>
 <head>
 </head>
 <body>
-<a href="/githublogin">LOGIN WITH GITHUB</a>
+<a href="/twitterlogin">LOGIN WITH TWITTER</a>
 </body>
 </html>
 `
@@ -32,8 +32,8 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, loginhtml)
 }
 
-func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("&&& handleGithubLogin begin")
+func handleTwitterLogin(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("&&& handleTwitterLogin begin")
 
 	fmt.Println("app url:", r.Host)
 
@@ -47,12 +47,13 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("redirect_uri:", redirect_uri)
 
 	values := url.Values{}
-	values.Add("client_id", "03712bbff7dae4203b4e")
+	//values.Add("client_id", "360647782")
+	values.Add("consumer_key", "5MXiwJpIpcIAQ5QOmcts3SFy7")
 	values.Add("redirect_uri", redirect_uri)
-	values.Add("scope", "user:email")
+	values.Add("scope", "public_profile")
 	values.Add("state", id.String())
 
-	redirectRequestUrl := fmt.Sprintf("https://github.com/login/oauth/authorize?%s",
+	redirectRequestUrl := fmt.Sprintf("https://api.twitter.com/oauth/authenticate?%s",
 		values.Encode())
 
 	fmt.Println("redirectRequestUrl:", redirectRequestUrl)
