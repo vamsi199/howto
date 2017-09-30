@@ -26,12 +26,6 @@ var CmdCustomer = &cobra.Command{
 	Use:   "customer",
 	Short: "short message for customer",
 	Long:  "long message for customer",
-	PreRunE: func(cmd *cobra.Command, args []string) error { //so far, this is the best way to make the argument mandatory. https://github.com/spf13/cobra/issues/346
-		if len(args) < 2 {
-			return errors.New("missing arguments")
-		}
-		return nil
-	},
 }
 
 var CmdCustomerGet = &cobra.Command{
