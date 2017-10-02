@@ -26,8 +26,6 @@ type dog struct {
 }
 
 func main() {
-
-
 	encodeToStdoutExample()
 	encodeToFileExample()
 	//encodeHandlerExample(w, r)
@@ -35,7 +33,6 @@ func main() {
 	decodeStringExample(`{"color":"brown","breed":"German Shepherd","age":5}`)
 	decodeFileExample("data.json")
 	//decodeHandlerExample(w, r)
-
 }
 
 func encodeToStdoutExample() {
@@ -78,5 +75,4 @@ func decode(i io.Reader)dog{
 		fmt.Println(err)
 	}
 	return output
-
 }
