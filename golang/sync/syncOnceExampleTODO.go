@@ -1,4 +1,6 @@
 package main
+//TODO: need to add notes on what this example is demonstrating
+
 
 import (
 	"fmt"
@@ -11,7 +13,6 @@ var i = 0
 var j = 0
 
 func getOnce() (int, int) {
-
 	onceIdms.Do(func() {
 		i++
 		time.Sleep(10000 * time.Millisecond)
