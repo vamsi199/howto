@@ -12,7 +12,7 @@ import (
 func init() {
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/githublogin", handleGithubLogin)
-	http.HandleFunc("/oauthcallback", handleOauthCallback)
+	http.HandleFunc("/callback", handleOauthCallback)
 
 }
 
@@ -63,11 +63,13 @@ func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleOauthCallback(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, r.FormValue("state"))
 	/*	state := r.FormValue("state")
 		////ctx := context.WithValue(r.Context(), "state", state)
 
 		ctx := r.Context()
 		//TODO: get session from context
+
 
 		//TODO: compare the state from session with the state from request. if no match, red flag
 	*/
