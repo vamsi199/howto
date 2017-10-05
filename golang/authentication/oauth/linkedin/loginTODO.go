@@ -52,7 +52,7 @@ func handleLinkedinLogin(w http.ResponseWriter, r *http.Request) {
 	values.Add("state", id.String())
 	values.Add("scope", "r_basicprofile")
 
-	redirectRequestUrl := fmt.Sprintf("https://www.linkedin.com/oauth/v2/authorization?%s",
+	redirectRequestUrl := fmt.Sprintf("https://www.linkedin.com/uas/oauth2/authorization?%s",
 		values.Encode())
 
 	fmt.Println("redirectRequestUrl:", redirectRequestUrl)
