@@ -32,10 +32,16 @@ There is no request token for this page. That's the special key we need from app
 *links:*
 
 http://pierrecaserta.com/go-oauth-facebook-github-twitter-google-plus/
+
 https://github.com/mrjones/oauth/blob/master/examples/twitter/twitter.go
+
 Sign In With Twitter: Create A Twitter App (2/5) https://www.youtube.com/watch?v=E0SmdBobo9Y
+
 Sign In With Twitter: Authenticating (4/5) https://www.youtube.com/watch?v=ZOej-9JUzyQ
+
 Implementing Sign in with Twitter: https://dev.twitter.com/web/sign-in/implementing
+
 GET oauth/authenticate https://developer.twitter.com/en/docs/basics/authentication/api-reference/authenticate
+
 POST oauth/request_token https://developer.twitter.com/en/docs/basics/authentication/api-reference/request_token
 
