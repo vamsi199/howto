@@ -4,6 +4,7 @@ details of the oauth url and token url for your program: below repo has details 
 
 
 where to go to setup the oauth:
+
 **linkedin:**
 
 https://developer.linkedin.com/docs/oauth2
@@ -23,6 +24,7 @@ step 3: Redirecting the user: GET oauth / authenticate
 
 
 *errors list:*
+
 1) 
 
 Whoa there!
