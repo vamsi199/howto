@@ -1,38 +1,19 @@
-package main
+package github
 
 import (
 	//"context"
 	"fmt"
 	"github.com/google/uuid"
-	"io"
 	"net/http"
 	"net/url"
 )
 
-func init() {
-	http.HandleFunc("/", handleIndex)
-	http.HandleFunc("/githublogin", handleGithubLogin)
-	http.HandleFunc("/callback", handleOauthCallback)
 
-}
 
 // https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/about-authorization-options-for-oauth-apps/
 
-const loginhtml = `<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
-<a href="/githublogin">LOGIN WITH GITHUB</a>
-</body>
-</html>
-`
 
-func handleIndex(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, loginhtml)
-}
-
-func handleGithubLogin(w http.ResponseWriter, r *http.Request) {
+func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("&&& handleGithubLogin begin")
 
 	fmt.Println("app url:", r.Host)
