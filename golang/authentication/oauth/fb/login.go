@@ -1,4 +1,4 @@
-package main
+package fb
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"net/url"
 )
 
-func handleFacebookLogin(w http.ResponseWriter, r *http.Request) {
+func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("&&& handleFacebookLogin begin")
 	fmt.Println("app url:", r.Host)
 
