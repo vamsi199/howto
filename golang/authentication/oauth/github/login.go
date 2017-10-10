@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 
@@ -28,7 +29,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("redirect_uri:", redirect_uri)
 
 	values := url.Values{}
-	values.Add("client_id", "03712bbff7dae4203b4e")
+	values.Add("client_id", os.Getenv("GITHUB_ID"))
 	values.Add("redirect_uri", redirect_uri)
 	values.Add("scope", "user:email")
 	values.Add("state", id.String())

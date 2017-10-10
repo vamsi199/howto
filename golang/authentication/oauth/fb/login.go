@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +15,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	redirect_uri := "http://" + r.Host + "/callback"
 
 	values := url.Values{}
-	values.Add("client_id", "123050871728605")
+	values.Add("client_id",os.Getenv("FB_ID") )
 	values.Add("redirect_uri", redirect_uri)
 	values.Add("response_type", "code")
 	values.Add("scope", "public_profile")
