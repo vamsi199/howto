@@ -16,10 +16,11 @@ import (
 )
 
 var svc *s3.S3
+var bucketName string = "crudapi"
 
 func Init() {
-	aws_access_key_id := ""     //TODO: change to read from env variable
-	aws_secret_access_key := "" //TODO: change to read from env variable
+	aws_access_key_id := os.Getenv("AWS_ACCESS_KEY_ID")
+	aws_secret_access_key := os.Getenv("AWS_SECRET_ACCESS_KEY")
 
 	token := ""
 	creds := credentials.NewStaticCredentials(aws_access_key_id, aws_secret_access_key, token)
@@ -29,13 +30,13 @@ func Init() {
 	}
 
 	cfg := aws.NewConfig().WithRegion("us-east-1").WithCredentials(creds)
-	svc = s3.New(session.New(), cfg) //TODO: session.New() is depricated
+	svc = s3.New(session.New(), cfg) //TODO: session.New() is deprecated
 }
 
-func upload(file string) error {
+func upload(f string) error {
 
 	// upload file
-	file, err := os.Open(file)
+	file, err := os.Open(f)
 	if err != nil {
 		return err
 	}
@@ -50,7 +51,7 @@ func upload(file string) error {
 	fileType := http.DetectContentType(buffer)
 	path := "/downloads/" + file.Name()
 	params := &s3.PutObjectInput{
-		Bucket:        aws.String("crudapi"),
+		Bucket:        aws.String(bucketName),
 		Key:           aws.String(path),
 		Body:          fileBytes,
 		ContentLength: aws.Int64(size),
@@ -67,7 +68,18 @@ func upload(file string) error {
 
 func main() {
 
-	err := upload("/Users/muly/go/src/github.com/muly/howto/golang/cloud/aws/s3/AWS-GO/crudapi.go")
+	//create a file
+	f, err:= os.Create("hello.txt")
+	if err != nil {
+		fmt.Printf("temp file create failed: %s", err)
+	}
+
+	f.Write([]byte("hello"))
+
+	f.Close()
+
+	path := "hello.txt"
+	err = upload(path)
 	if err != nil {
 		fmt.Printf("upload failed: %s", err)
 	}
@@ -97,7 +109,7 @@ func main() {
 
 	// list
 	listInput := &s3.ListObjectsInput{
-		Bucket:  aws.String("crudapi"),
+		Bucket:  aws.String(bucketName),
 		MaxKeys: aws.Int64(2),
 	}
 
