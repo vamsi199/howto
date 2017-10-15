@@ -30,6 +30,9 @@ func main() {
 	http.HandleFunc("/facebooklogin", fb.HandleLogin)
 	http.HandleFunc("/linkedinlogin", linkedin.HandleLogin)
 	http.HandleFunc("/googlelogin", google.HandleLogin)
+	http.HandleFunc("/googlecallback", google.HandleCallback)
+	http.HandleFunc("/googlecallbacktoken", google.HandleCallbackToken)
+
 	http.ListenAndServe(":8081", nil)
 }
 

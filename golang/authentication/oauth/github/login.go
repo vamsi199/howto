@@ -1,7 +1,6 @@
 package github
 
 import (
-	//"context"
 	"fmt"
 	"github.com/google/uuid"
 	"net/http"
@@ -9,22 +8,16 @@ import (
 	"os"
 )
 
-
-
 // https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/about-authorization-options-for-oauth-apps/
 
-
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("&&& handleGithubLogin begin")
+	fmt.Println("&&& github.HandleLogin begin")
 
 	fmt.Println("app url:", r.Host)
 
 	id := uuid.New()
 	fmt.Println("id:", id)
-	//ctx := r.Context()
-	//TODO: get session from context
 
-	//redirect_uri := "http://localhost:8080/callback"
 	redirect_uri := "http://" + r.Host + "/callback"
 	fmt.Println("redirect_uri:", redirect_uri)
 
@@ -38,9 +31,6 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 		values.Encode())
 
 	fmt.Println("redirectRequestUrl:", redirectRequestUrl)
-
-	//TODO: save session back to context after saving the id.String()  to a field in session.State
-
 	http.Redirect(w, r, redirectRequestUrl, 302)
 }
 

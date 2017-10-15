@@ -9,16 +9,13 @@ import (
 )
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("&&& handleLinkedinLogin begin")
+	fmt.Println("&&& linkedin.HandleLogin begin")
 
 	fmt.Println("app url:", r.Host)
 
 	id := uuid.New()
 	fmt.Println("id:", id)
-	//ctx := r.Context()
-	//TODO: get session from context
 
-	//redirect_uri := "https://localhost:8081/callback"
 	redirect_url := "http://" + r.Host + "/callback"
 	fmt.Println("redirect_url:", redirect_url)
 

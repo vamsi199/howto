@@ -3,13 +3,14 @@ package fb
 import (
 	"fmt"
 	"github.com/google/uuid"
+	"golang.org/x/oauth2/facebook"
 	"net/http"
 	"net/url"
 	"os"
 )
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("&&& handleFacebookLogin begin")
+	fmt.Println("&&& fb.HandleLogin begin")
 	fmt.Println("app url:", r.Host)
 
 	redirect_uri := "http://" + r.Host + "/callback"
@@ -23,7 +24,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	id := uuid.New()
 	values.Add("state", id.String())
 
-	redirectRequestUrl := fmt.Sprintf("https://www.facebook.com/dialog/oauth?%s", values.Encode())
+	redirectRequestUrl := fmt.Sprintf("%v?%s", facebook.Endpoint.AuthURL, values.Encode())
 	fmt.Println("redirectRequestUrl", redirectRequestUrl)
 	http.Redirect(w, r, redirectRequestUrl, 302)
 }
