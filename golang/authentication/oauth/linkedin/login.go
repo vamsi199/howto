@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"fmt"
 	"net/url"
+	"os"
 )
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +24,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 
 	values := url.Values{}
 	values.Add("response_type", "code")
-	values.Add("client_id", "86ea5lkjtzu85s")
+	values.Add("client_id", os.Getenv("LINKEDIN_ID"))
 	values.Add("redirect_uri", redirect_url)
 	values.Add("state", id.String())
 	values.Add("scope", "r_basicprofile")
