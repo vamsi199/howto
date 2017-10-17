@@ -1,9 +1,9 @@
 package linkedin
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"net/http"
-	"fmt"
 	"net/url"
 	"os"
 )

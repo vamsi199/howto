@@ -21,14 +21,14 @@ func main() {
 }
 
 func marshalExample() {
-	d := dog{Color:"brown", Breed:"German Shepherd", Age:5}
-	b, _ :=json.Marshal(&d)
+	d := dog{Color: "brown", Breed: "German Shepherd", Age: 5}
+	b, _ := json.Marshal(&d)
 	fmt.Println(string(b))
 }
 
-func unmarshalExample(){
+func unmarshalExample() {
 	jsonStr := `{"color":"brown","breed":"German Shepherd","age":5}`
-	d:=dog{}
+	d := dog{}
 	json.Unmarshal([]byte(jsonStr), &d)
 	fmt.Println(d)
 }

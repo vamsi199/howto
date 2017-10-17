@@ -11,12 +11,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"os"
-	"bytes"
 	"io"
 	"net/http"
+	"os"
 )
 
 type dog struct {
@@ -36,26 +36,25 @@ func main() {
 }
 
 func encodeToStdoutExample() {
-	d := dog{Color:"brown", Breed:"German Shepherd", Age:5}
+	d := dog{Color: "brown", Breed: "German Shepherd", Age: 5}
 	encode(d, os.Stdout)
 }
 
 func encodeToFileExample() {
-	d := dog{Color:"brown", Breed:"German Shepherd", Age:5}
+	d := dog{Color: "brown", Breed: "German Shepherd", Age: 5}
 	fileOut, _ := os.OpenFile("data.json", os.O_RDWR|os.O_CREATE, 0755)
 	encode(d, fileOut)
 }
 func encodeHandlerExample(w http.ResponseWriter, r *http.Request) {
-	d := dog{Color:"brown", Breed:"German Shepherd", Age:5}
+	d := dog{Color: "brown", Breed: "German Shepherd", Age: 5}
 	encode(d, w)
 }
-func encode(i dog, o io.Writer){
+func encode(i dog, o io.Writer) {
 	err := json.NewEncoder(o).Encode(i) // to send as response http handler, use w, instead of Stdout
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 	}
 }
-
 
 func decodeStringExample(str string) {
 	stringInput := bytes.NewBuffer([]byte(str))
@@ -65,13 +64,13 @@ func decodeFileExample(fileName string) {
 	fileInput, _ := os.Open(fileName)
 	fmt.Println(decode(fileInput)) // File type
 }
-func decodeHandlerExample(w http.ResponseWriter, r *http.Request){
+func decodeHandlerExample(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(decode(r.Body)) //io.ReadCloser type
 }
-func decode(i io.Reader)dog{
+func decode(i io.Reader) dog {
 	output := dog{}
 	err := json.NewDecoder(i).Decode(&output)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 	}
 	return output

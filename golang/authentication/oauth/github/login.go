@@ -9,10 +9,7 @@ import (
 	"os"
 )
 
-
-
 // https://developer.github.com/apps/building-integrations/setting-up-and-registering-oauth-apps/about-authorization-options-for-oauth-apps/
-
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("&&& handleGithubLogin begin")

@@ -6,27 +6,26 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"os"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"os"
 )
 
 var sess *session.Session
 var s3Client *s3.S3
-
 
 func main() {
 
 	//filePath := "s3crud2TODO.go"
 	bkt := "muly123"
 
-/*	err := createBkt(bkt)
-	if err != nil {
-		fmt.Println("bucket create error:", err)
-	}
-	fmt.Printf("bucket %v created sucessfully\n", bkt)*/
+	/*	err := createBkt(bkt)
+		if err != nil {
+			fmt.Println("bucket create error:", err)
+		}
+		fmt.Printf("bucket %v created sucessfully\n", bkt)*/
 
 	filePath := "s3crud2TODO.go"
 	key, err := upload(filePath, bkt)

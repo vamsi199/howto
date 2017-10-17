@@ -35,4 +35,3 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, redirectRequestUrl, 302)
 }
-

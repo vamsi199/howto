@@ -15,7 +15,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	redirect_uri := "http://" + r.Host + "/callback"
 
 	values := url.Values{}
-	values.Add("client_id",os.Getenv("GOOGLE_ID") )
+	values.Add("client_id", os.Getenv("GOOGLE_ID"))
 	values.Add("redirect_uri", redirect_uri)
 	values.Add("scope", "https://www.googleapis.com/auth/admin.directory.device.mobile.readonly")
 	values.Add("response_type", "code")

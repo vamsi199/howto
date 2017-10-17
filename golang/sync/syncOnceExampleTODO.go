@@ -1,6 +1,6 @@
 package main
-//TODO: need to add notes on what this example is demonstrating
 
+//TODO: need to add notes on what this example is demonstrating
 
 import (
 	"fmt"

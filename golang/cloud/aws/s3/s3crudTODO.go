@@ -69,7 +69,7 @@ func upload(f string) error {
 func main() {
 
 	//create a file
-	f, err:= os.Create("hello.txt")
+	f, err := os.Create("hello.txt")
 	if err != nil {
 		fmt.Printf("temp file create failed: %s", err)
 	}
