@@ -24,18 +24,16 @@ const loginhtml = `<!DOCTYPE html>
 `
 
 func main() {
-	http.HandleFunc("/", handleindex)
+	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/githublogin", github.HandleLogin)
 	http.HandleFunc("/gitlablogin", gitlab.HandleLogin)
 	http.HandleFunc("/facebooklogin", fb.HandleLogin)
 	http.HandleFunc("/linkedinlogin", linkedin.HandleLogin)
-	http.HandleFunc("/googlelogin", google.HandleLogin)
-	http.HandleFunc("/googlecallback", google.HandleCallback)
-	http.HandleFunc("/googlecallbacktoken", google.HandleCallbackToken)
+	google.Handlers()
 
 	http.ListenAndServe(":8081", nil)
 }
 
-func handleindex(w http.ResponseWriter, r *http.Request) {
+func handleIndex(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, loginhtml)
 }
