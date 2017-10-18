@@ -25,10 +25,7 @@ func initORM() *xorm.Engine {
 
 type Customer struct {
 	Id   int
-	Name string `xorm:"text name2"`
-}
-func (Customer) TableName() string {
-	return "customer_table"
+	Name string
 }
 
 type CustomerList []Customer
@@ -54,6 +51,18 @@ func (d *CustomerList) GetFiltered() error {
 	}
 	return nil
 }
+func (d *CustomerList) GetFilteredBetween() error {
+	xorm := initORM()
+
+	err := xorm.
+	//Where("name2 = ?", "A").
+	Where("id between ? and ?", 2, 4).
+		Find(d)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (d *CustomerList) GetFilteredRaw() error {
 	xorm := initORM()
@@ -70,8 +79,10 @@ func (d *CustomerList) GetFilteredRaw() error {
 
 
 func main() {
-	c := CustomerList{}
+	xorm := initORM()
+	xorm.Sync2(&Customer{})
 
+	c := CustomerList{}
 	err := c.GetFiltered()
 	if err != nil {
 		fmt.Println(err)
