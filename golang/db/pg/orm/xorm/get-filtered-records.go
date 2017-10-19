@@ -29,6 +29,7 @@ type Customer struct {
 }
 
 type CustomerList []Customer
+
 func (d *CustomerList) GetAll() error {
 	xorm := initORM()
 
@@ -39,24 +40,29 @@ func (d *CustomerList) GetAll() error {
 
 	return nil
 }
-func (d *CustomerList) GetFiltered() error {
+func get(d interface{}) error {
 	xorm := initORM()
 
 	err := xorm.
 		//Where("name2 = ?", "A").
-		Where("id >= ?", 2).Where("id <= ?", 3).
+		Where("id >= ?", 2).Where("id <= ?", 4).
 		Find(d)
 	if err != nil {
 		return err
 	}
 	return nil
 }
+func (d *CustomerList) GetFiltered() error {
+	return get(d)
+}
+
+
 func (d *CustomerList) GetFilteredBetween() error {
 	xorm := initORM()
 
 	err := xorm.
-	//Where("name2 = ?", "A").
-	Where("id between ? and ?", 2, 4).
+		//Where("name2 = ?", "A").
+		Where("id between ? and ?", 2, 4).
 		Find(d)
 	if err != nil {
 		return err
@@ -76,7 +82,6 @@ func (d *CustomerList) GetFilteredRaw() error {
 
 	return nil
 }
-
 
 func main() {
 	xorm := initORM()
