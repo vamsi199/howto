@@ -6,7 +6,7 @@
 //// decode:
 //////	from a json string
 //////	from a json file
-//////	from json data in http response
+//////	from json data in http request
 
 package main
 
