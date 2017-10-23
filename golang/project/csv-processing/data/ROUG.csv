@@ -1,2 +1,4 @@
 Road_ID,Start_Chain,End_Chain,Admin_Unit,IRI_Average,Survey_Date,Year_of_Survey,Notes,File_Name
-21,22,23,24,t,m,v,c,l
+1,0.8,0.9,2,a5,b5,c5,d5,e5
+1,0.9,1,2,a6,b6,c6,d6,e6
+1,1.01,1.02,2,a7,b7,c7,d7,e7
