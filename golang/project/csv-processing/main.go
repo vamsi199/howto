@@ -65,6 +65,7 @@ type dataOutput struct { // TODO: need some changes to this struct fields
 	OutputCway
 	OutputDsin
 	OutputRoug
+	fileType string
 }
 
 func readCway() []dataCway {
@@ -132,38 +133,85 @@ func main() {
 	//	fmt.Println(c)
 	//}
 
-
 	// merge them into single dataset, get only the necessary fields from each of the structs
 	temp := make([]dataOutput, 0, len(cway)+len(dsin)+len(roug))
 	for _, c := range cway {
-		t := dataOutput{Common:c.Common}
-		//t.OutputCway = c.OutputCway
+		t := dataOutput{Common: c.Common}
+		t.OutputCway = c.OutputCway
+		t.fileType = "cway"
 		temp = append(temp, t)
 	}
 	for _, c := range dsin {
-		t := dataOutput{Common:c.Common}
+		t := dataOutput{Common: c.Common}
+		t.OutputDsin = c.OutputDsin
+		t.fileType = "dsin"
 		temp = append(temp, t)
 	}
 	for _, c := range roug {
-		t := dataOutput{Common:c.Common}
+		t := dataOutput{Common: c.Common}
+		t.OutputRoug = c.OutputRoug
+		t.fileType = "roug"
 		temp = append(temp, t)
 	}
 
-
-	for _, c := range temp{
+	for _, c := range temp {
 		fmt.Println(c)
 	}
 
+	out := []dataOutput{} //TODO: use make
 
 	// for each Road_ID
+	dataMap := map[int][]dataOutput{}
+	for _, v := range temp {
+		c, exists := dataMap[v.Road_ID]
+		if exists {
+			c = append(c, v)
+		}
+		dataMap[v.Road_ID] = c
+	}
+	for roadId, val := range dataMap {
 
-	//// extract the start and end chain values into []float32
+		//// extract the start and end chain values into []float32
+		oneD := make([]float32, 0, len(val)*2)
+		for _, c := range val {
+			oneD = append(oneD, c.Start_Chain, c.End_Chain)
+		}
 
-	//// pass it to algo func
+		//// pass it to algo func
+		chain := algo(oneD)
 
-	//// to the resulting []chain set, join with the original set for the given Road_ID, to bring in the rest of the fields
+		//// to the resulting []chain set, join with the original set for the given Road_ID, to bring in the rest of the fields
+		for _, c := range chain {
+			d := dataOutput{}
+			for _, v := range val {
+				if c.Start_Chain >= v.Start_Chain && c.End_Chain <= v.End_Chain {
+					switch v.fileType {
+					case "cway":
+						d.OutputCway = v.OutputCway
+					case "dsin":
+						d.OutputDsin = v.OutputDsin
+					case "roug":
+						d.OutputRoug = v.OutputRoug
+					}
+//TODO: need to review, looks like there is bug in getting all the output sets
+				}
+				d.Admin_Unit = v.Admin_Unit
 
-	//// merge this resultset into the final output result set
+			}
+			d.Start_Chain = c.Start_Chain
+			d.End_Chain = c.End_Chain
+			d.Road_ID = roadId
 
-	// save the final output set output file
+			out = append(out, d)
+
+		}
+
+		// save the final output set output file //TODO
+		fmt.Println("Final Output:::::::::::::::\n")
+		for _, o:= range out {
+			fmt.Println(o)
+		}
+
+
+	}
 }
