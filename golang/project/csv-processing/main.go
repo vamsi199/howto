@@ -210,7 +210,6 @@ func main() {
 					case "roug":
 						d.OutputRoug = v.OutputRoug
 					}
-//TODO: need to review, looks like there is bug in getting all the output sets
 				}
 				d.Admin_Unit = v.Admin_Unit
 
@@ -223,12 +222,20 @@ func main() {
 
 		}
 
-		// save the final output set output file //TODO
-		log.Infoln("Final Output:::::::::::::::\n")
+		// save the final output set output file
+		log.Debugln("Final Output:::::::::::::::\n")
 		for _, o:= range out {
-			log.Infoln(o)
+			log.Debugln(o)
 		}
-
+		outputFile, err := os.OpenFile(dataFolderPath+"output.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+		defer outputFile.Close()
+		err = gocsv.MarshalFile(&out, outputFile) // Use this to save the CSV back to the file
+		if err != nil {
+			panic(err)
+		}
 
 	}
 }
