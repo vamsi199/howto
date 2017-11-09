@@ -219,23 +219,21 @@ func main() {
 			d.Road_ID = roadId
 
 			out = append(out, d)
+		}
+	}
 
-		}
-
-		// save the final output set output file
-		log.Debugln("Final Output:::::::::::::::\n")
-		for _, o:= range out {
-			log.Debugln(o)
-		}
-		outputFile, err := os.OpenFile(dataFolderPath+"output.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
-		if err != nil {
-			panic(err)
-		}
-		defer outputFile.Close()
-		err = gocsv.MarshalFile(&out, outputFile) // Use this to save the CSV back to the file
-		if err != nil {
-			panic(err)
-		}
-
+	// save the final output set output file
+	log.Debugln("Final Output:::::::::::::::\n")
+	for _, o:= range out {
+		log.Debugln(o)
+	}
+	outputFile, err := os.OpenFile(dataFolderPath+"output.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+	defer outputFile.Close()
+	err = gocsv.MarshalFile(&out, outputFile) // Use this to save the CSV back to the file
+	if err != nil {
+		panic(err)
 	}
 }
