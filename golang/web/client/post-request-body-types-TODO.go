@@ -19,56 +19,58 @@ import (
 )
 
 func main(){
-	var b bytes.Buffer
-	content:= "hello"
-	b.WriteString(content)
-	w:=multipart.NewWriter(&b)
-	file,err:=os.Open("hello.txt")
-	if err!=nil {
-		fmt.Println("cannot open the file",err)
-	}
-	defer file.Close()
-	file.WriteString(content)
-	iow,err:=w.CreateFormFile("value","hello.txt")
-	if err!= nil{
-		fmt.Println("cannot create form file",err)
-	}
-	_,err=io.Copy(iow,file)
-	if err!= nil{
-		fmt.Println("cannot copy to form file",err)
-	}
-	keywriter,err:=w.CreateFormField("key")
-	if err!= nil{
-		fmt.Println("cannot create key",err)
-	}
-	_,err=	keywriter.Write([]byte("hello"))
-	if err!= nil{
-		fmt.Println("cannot create key",err)
-	}
-	err=w.Close()
-	if err!= nil{
-		fmt.Println("cannot close multipart writer",err)
+
+filename := "hello.txt"
+
+
+
+
+	body, contentType, err := GetMultipartFormData(filename)
+
+	url := "http://localhost:8080/formdatafile"
+
+	resp, err:= http.Post(url,contentType, body)
+	if err != nil{
+		fmt.Println("cannot post",err)
+return
 	}
 
 
-	url := "https://localhost:8080/formdatafile"
-	req,err := http.NewRequest("POST",url,bytes.NewBufferString(content))
-	if err!= nil{
-		fmt.Println("cannot set the request",err)
-	}
-	req.Form.Set("hello","hello.txt")
-	client:=&http.Client{}
-	resopnse,err:=client.Do(req)
-	if err!= nil{
-		fmt.Println("cannot get the responce",err)
-	}
-	defer resopnse.Body.Close()
-	byte,err:=ioutil.ReadAll(resopnse.Body)
+	defer resp.Body.Close()
+	byte,err:=ioutil.ReadAll(resp.Body)
 	if err!= nil{
 		fmt.Println("cannot read the responce",err)
+		return
 	}
 	fmt.Println(string(byte))
 
 
 
+}
+
+func GetMultipartFormData(filename string)(data io.Reader, contentType string, err error){
+
+	body := &bytes.Buffer{}
+	mw:=multipart.NewWriter(body)
+
+	w, err := mw.CreateFormFile("hello", filename)
+	if err != nil{
+return nil, "", err
+	}
+
+	f, err := os.Open(filename)
+	if err != nil{
+return nil, "", err
+	}
+	_, err= io.Copy(w, f)
+	if err != nil{
+return nil,"", err
+	}
+
+	err = mw.Close()
+	if err != nil{
+return nil, "", err
+	}
+
+	return body, mw.FormDataContentType(), nil
 }
