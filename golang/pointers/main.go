@@ -20,6 +20,11 @@ func main() {
 	vm := map[int]int{0: 10}
 	fMap(vm)
 	fmt.Println("map outside func", vm)
+
+	vstr := "10"
+	fString(vstr)
+	fmt.Println("string outside func", vstr)
+
 }
 
 func incv(a int) { // passed by value
@@ -45,4 +50,9 @@ func fSlice(a []int) { // slices are passed by reference by default
 func fMap(a map[int]int) { // maps are passed by reference by default
 	a[0] = 99
 	fmt.Println("map inside func", a)
+}
+
+func fString(a string){
+	a = "99"
+	fmt.Println("string inside func", a)
 }
