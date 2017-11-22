@@ -9,6 +9,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"io"
 )
 
 func main() {
@@ -18,5 +19,24 @@ func main() {
 
 //1b) form data file type example
 func handlerFormDataFileType(w http.ResponseWriter, r *http.Request) {
+
+	r.ParseMultipartForm(32<<30)
+	dataFile, _, err := r.FormFile("file") // Here file is the key specified in the form while sending the file in form
+	if err != nil{
+		fmt.Fprintln(w, "r.formfile error:"+err.Error())
+		return
+	}
+	if dataFile == nil{
+		fmt.Fprintln(w, "file NOT received")
+		return
+	}
+	defer dataFile.Close()
+
+	processFile(dataFile)
+
 	fmt.Fprintln(w, "file received")
+}
+
+func processFile(f io.Reader)error{
+	return nil
 }
