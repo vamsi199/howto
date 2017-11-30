@@ -4,7 +4,7 @@
 //3) raw data: json or any plain text formats
 //4) binary
 //5) multipart file attachment?????
-package main
+package net_http
 
 import (
 	"fmt"
