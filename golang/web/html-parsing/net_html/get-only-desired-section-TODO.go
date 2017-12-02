@@ -12,24 +12,46 @@ import (
 // Attr.Key: id
 // Attr.Val: pkg-overview
 
-var requiredNodePath *html.Node
+var requiredNodePath []*html.Node
 
 func init() {
-
-	//n := html.Node{}
-	requiredNodePath.Type = html.ElementNode
-	requiredNodePath.Data = "h2"
+	//TODO: these additions are not reflecting
+	n := html.Node{}
+	n.Type = html.ElementNode
+	n.Data = "div"
 	a := html.Attribute{}
-	a.Key = "id"
-	a.Val = "pkg-overview"
-	requiredNodePath.Attr = append(requiredNodePath.Attr, a)
+	a.Key = "class"
+	a.Val = "post-footer-line post-footer-line-1"
+	n.Attr = append(n.Attr, a)
+	requiredNodePath = append(requiredNodePath, &n)
 
-	//requiredNodePath = append(requiredNodePath, n)
+	n = html.Node{}
+	n.Type = html.ElementNode
+	n.Data = "div"
+	a = html.Attribute{}
+	a.Key = "class"
+	a.Val = "post-author vcard"
+	n.Attr = append(n.Attr, a)
+	requiredNodePath = append(requiredNodePath, &n)
 
+	n = html.Node{}
+	n.Type = html.ElementNode
+	n.Data = "span"
+	a = html.Attribute{}
+	a.Key = "itemprop"
+	a.Val = "name"
+	n.Attr = append(n.Attr, a)
+	requiredNodePath = append(requiredNodePath, &n)
+
+	n = html.Node{}
+	n.Type = html.TextNode
+	requiredNodePath = append(requiredNodePath, &n)
 }
 
 func main() {
-	url := `https://godoc.org/golang.org/x/oauth2`
+	//url := `https://godoc.org/golang.org/x/oauth2`
+	//url := `https://socketloop.com/tutorials/golang-read-file`
+	url := `http://goblog.qwest.io/2017/09/protobuf-for-go-quick-reference.html`
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -49,7 +71,7 @@ func main() {
 }
 
 func isMatchingNode(n *html.Node, matchWith *html.Node) bool {
-	if n.Type == matchWith.Type && n.Data == matchWith.Data {
+	if n.Type == matchWith.Type && n.Data == matchWith.Data { // TODO: check only on non blank fields
 		matchCnt := 0
 		for _, a := range matchWith.Attr {
 			for _, w := range n.Attr {
@@ -64,23 +86,28 @@ func isMatchingNode(n *html.Node, matchWith *html.Node) bool {
 		return true
 	}
 	return false
-
 }
 
 type WalkFunc func(*html.Node, *html.Node) bool
 
-func FindMatchingNode(root *html.Node, match *html.Node, walkF WalkFunc) {
-	var f func(*html.Node)
-	f = func(n *html.Node) {
-		if walkF(n, match) {
-			fmt.Println(nodeTypeText(n.Type), n.Data, n.Attr)
-		}
+func FindMatchingNode(root *html.Node, match []*html.Node, walkF WalkFunc) {
+	for _, m:= range match {
+		fmt.Println(nodeTypeText(m.Type), m.Data, m.Attr)
+		var f func(*html.Node)*html.Node
+		f = func(n *html.Node) *html.Node {
+			//fmt.Println(nodeTypeText(n.Type), n.Data, n.Attr)
+			if walkF(n, m) {
+				//fmt.Println(nodeTypeText(n.Type), n.Data, n.Attr)
+				return n
+			}
 
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			f(c)
+			for c := n.FirstChild; c != nil; c = c.NextSibling {
+				f(c)
+			}
+			return nil
 		}
+		f(root)
 	}
-	f(root)
 }
 
 func nodeTypeText(nodeType html.NodeType) string {
