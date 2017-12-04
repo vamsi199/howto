@@ -23,7 +23,7 @@ func main() {
 	Customers = append(Customers, customer{2, "Robin"})
 
 	router := mux.NewRouter()
-	//customer api
+	//customer pb
 	router.HandleFunc("/customers", customerHandler).Methods("GET")                    //gets all customers
 	router.HandleFunc("/customers/{id}", getCustomerHandler).Methods("GET")            //gets one customer
 	router.HandleFunc("/customers/{id}/{name}", editCustomerHandler).Methods("PUT")    //gets one customer
