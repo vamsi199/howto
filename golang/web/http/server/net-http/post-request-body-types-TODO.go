@@ -17,7 +17,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-//1b) form data file type example
+//1b) form data file type example-TODO
 func handlerFormDataFileType(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseMultipartForm(32<<30)
